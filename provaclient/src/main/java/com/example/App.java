@@ -1,28 +1,62 @@
 package com.example;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class App 
-{
-    public static void main( String[] args ) throws Exception
-    {
-        Socket s = new Socket("localhost", 3000);
-        PrintWriter pr = new PrintWriter(s.getOutputStream());
+// CLIENT
+public class App {
 
-        BufferedReader tastiera = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Inserisci il messaggio:");
-        String stringaUtente = tastiera.readLine();
-        
-        pr.println(stringaUtente);
+    public static void main(String[] args) throws Exception {
+        String strServer = null, strClient = null;
+        InputStreamReader in = null;
+        BufferedReader br = null, input = null;
+        PrintWriter pr = null;
+
+        Socket s = new Socket("localhost", 3000);
+        pr = new PrintWriter(s.getOutputStream());
+
+        // Client invia messaggio al server
+        pr.println("Eccomi");
         pr.flush();
 
-        InputStreamReader in = new InputStreamReader(s.getInputStream());
-        BufferedReader br = new BufferedReader(in);
+        // Client riceve messaggio dal server "Benvenuto dammi il tuo peso"
+        in = new InputStreamReader(s.getInputStream());
+        br = new BufferedReader(in);
+        strServer = br.readLine();
+        System.out.println("Server -> " + strServer);
 
-        String str = br.readLine();
-        System.out.println("Server: " + str);
+        // Client chiede in input da tastiera il peso e lo invia al server
+        input = new BufferedReader(new InputStreamReader(System.in));
+        strClient = input.readLine();
+        pr = new PrintWriter(s.getOutputStream());
+        pr.println(strClient);
+        pr.flush();
+
+        // Client riceve messaggio dal server "Benvenuto dammi la tua altezza"
+        in = new InputStreamReader(s.getInputStream());
+        br = new BufferedReader(in);
+        strServer = br.readLine();
+        System.out.println("Server -> " + strServer);
+
+        // Client chiede in input da tastiera il peso e lo invia al server
+        input = new BufferedReader(new InputStreamReader(System.in));
+        strClient = input.readLine();
+        pr = new PrintWriter(s.getOutputStream());
+        pr.println(strClient);
+        pr.flush();
+
+        // Client riceve il risultato dal server
+        in = new InputStreamReader(s.getInputStream());
+        br = new BufferedReader(in);
+        strServer = br.readLine();
+        System.out.println("Server -> " + strServer);
+
+        // Client invia al server messaggio "Grazie, ciao"
+        pr.println("Grazie, ciao");
+        pr.flush();
+
         s.close();
     }
 }
